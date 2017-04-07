@@ -12,12 +12,28 @@ type Peligro = (Dirección, Int, TipoPeligro)
 
 instance Show NaveEspacial where
   show = ("\n" ++) . (padNave 0 0 False)
+
+naveSinMotor = Base Contenedor  
+
+nave1 = Base Motor
+nave2 = Módulo Cañón (Base Escudo) (Base Motor)
+nave3 = Módulo Motor (Base Escudo) (Base Cañón)
+nave4 = Módulo Contenedor nave2 nave3
+nave5 = Módulo Contenedor nave3 nave2
+nave6 = Módulo Contenedor nave4 nave1
+nave7 = Módulo Contenedor nave1 nave5
+nave8 = Módulo Contenedor nave1 nave6
+nave9 = Módulo Escudo 
+		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
+		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo))) 
   
 padNave nivel acum doPad (Base c) = (if doPad then pad (4*nivel + acum) else "") ++ show c
 padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) else "") ++ show x ++ 
 					  pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
 					  padNave (nivel+1) (acum+l) True d where l = length $ show x
 
+					  
+					  
 pad :: Int -> String
 pad i = replicate i ' '
 
@@ -31,14 +47,14 @@ foldNave naveCompleta naveBase (Módulo c n m) = naveCompleta c (subNave n) (sub
 
 --Ejercicio 2
 capacidad :: NaveEspacial -> Int
-capacidad = undefined
+capacidad = contarComponentes Contenedor   
 				
-
 poderDeAtaque :: NaveEspacial -> Int
-poderDeAtaque = undefined
+poderDeAtaque = contarComponentes Cañón   
 
+--Arreglarlo, sacarle el parametro y usar flip o .
 puedeVolar :: NaveEspacial -> Bool
-puedeVolar = undefined
+puedeVolar n =  (>0) (contarComponentes Motor n)    
 
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
 mismoPotencial = undefined
@@ -71,3 +87,14 @@ componentesPorNivel = undefined
 
 dimensiones :: NaveEspacial -> (Int, Int)
 dimensiones = undefined
+
+-----------------------------------------------------------------------------------------------
+------------------------------AUXILIARES-------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+
+contarComponentes ::  Componente -> NaveEspacial -> Int
+contarComponentes com = foldNave (\c m n -> esComponente c com + m + n) (\c -> esComponente c com) 
+
+--Habria que hacerlo mas elegante
+esComponente :: Componente -> Componente -> Int
+esComponente c d = if c==d then 1 else 0
