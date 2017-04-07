@@ -22,12 +22,17 @@ pad :: Int -> String
 pad i = replicate i ' '
 
 --Ejercicio 1
-foldNave :: undefined
-foldNave = undefined
+--Modulo : Componente -> r -> r -> r
+--Base : Componente -> r
+foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
+foldNave naveCompleta naveBase (Base c) = naveBase c
+foldNave naveCompleta naveBase (Módulo c n m) = naveCompleta c (subNave n) (subNave m)
+                                                where subNave = foldNave naveCompleta naveBase
 
 --Ejercicio 2
 capacidad :: NaveEspacial -> Int
 capacidad = undefined
+				
 
 poderDeAtaque :: NaveEspacial -> Int
 poderDeAtaque = undefined
