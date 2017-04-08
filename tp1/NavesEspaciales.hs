@@ -76,7 +76,7 @@ mayorCapacidad ns = head (filter (\n -> capacidad n == maxC) ns)
 --Ejercicio 4
 
 transformar :: (Componente -> Componente) -> NaveEspacial -> NaveEspacial
-transformar = undefined
+transformar compReplace = foldNave (\c -> Módulo (compReplace c)) (Base . compReplace)
 
 -- Ejercicio 5
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
