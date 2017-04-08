@@ -46,25 +46,27 @@ pad i = replicate i ' '
 --Modulo : Componente -> r -> r -> r
 --Base : Componente -> r
 foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
-foldNave naveCompleta naveBase (Base c) = naveBase c
-foldNave naveCompleta naveBase (Módulo c n m) = naveCompleta c (subNave n) (subNave m)
-                                                where subNave = foldNave naveCompleta naveBase
+foldNave fNaveCompleta fNaveBase (Base c) = fNaveBase c
+foldNave fNaveCompleta fNaveBase (Módulo c n m) = fNaveCompleta c (subNave n) (subNave m)
+                                                where subNave = foldNave fNaveCompleta fNaveBase
 
 --Ejercicio 2
 capacidad :: NaveEspacial -> Int
-capacidad = contarComponentes Contenedor   
+capacidad = contarComponentes Contenedor
 				
 poderDeAtaque :: NaveEspacial -> Int
 poderDeAtaque = contarComponentes Cañón   
 
 --Arreglarlo, sacarle el parametro y usar flip o .
 puedeVolar :: NaveEspacial -> Bool
-puedeVolar n =  (>0) (contarComponentes Motor n)    
+puedeVolar n = (>0) (contarComponentes Motor n)
 
 --Sacarle el argumento
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
-mismoPotencial n m =  areEqual (map (flip contarComponentes n) losComponentes) (map (flip contarComponentes m) losComponentes)
+mismoPotencial n m = (contarTodosComponentes n) == (contarTodosComponentes m)
+                   where contarTodosComponentes = \nave -> (map (flip contarComponentes n) losComponentes)
 
+--mismoPotencial
 --Ejercicio 3
 
 mayorCapacidad :: [NaveEspacial] -> NaveEspacial
@@ -104,10 +106,3 @@ contarComponentes com = foldNave (\c m n -> esComponente c com + m + n) (\c -> e
 --Habria que hacerlo mas elegante
 esComponente :: Componente -> Componente -> Int
 esComponente c d = if c==d then 1 else 0
-
-
-areEqual:: Eq a => [a] -> [a] -> Bool
-areEqual [] [] = True
-areEqual _ [] = False
-areEqual [] _ = True
-areEqual (x:xs) (y:ys) = (x==y) && areEqual xs ys
