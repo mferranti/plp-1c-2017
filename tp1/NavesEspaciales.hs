@@ -70,7 +70,8 @@ mismoPotencial n m = (contarTodosComponentes n) == (contarTodosComponentes m)
 --Ejercicio 3
 
 mayorCapacidad :: [NaveEspacial] -> NaveEspacial
-mayorCapacidad = undefined
+mayorCapacidad ns = head (filter (\n -> capacidad n == maxC) ns)
+                  where maxC = maximum $ map capacidad ns
 
 --Ejercicio 4
 
