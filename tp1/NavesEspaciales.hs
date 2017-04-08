@@ -1,6 +1,8 @@
 module NavesEspaciales (Componente(Contenedor, Motor, Escudo, Cañón), NaveEspacial(Módulo, Base), Dirección(Babor, Estribor), TipoPeligro(Pequeño, Grande, Torpedo), Peligro, foldNave, capacidad, poderDeAtaque, puedeVolar, mismoPotencial, mayorCapacidad, transformar, impactar, maniobrar, pruebaDeFuego, componentesPorNivel, dimensiones) where
 
-data Componente = Contenedor | Motor | Escudo | Cañón deriving (Eq, Show)
+import Data.List
+
+data Componente = Contenedor | Motor | Escudo | Cañón deriving (Eq, Show, Enum)
 
 data NaveEspacial = Módulo Componente NaveEspacial NaveEspacial | Base Componente deriving Eq
 
@@ -12,9 +14,11 @@ type Peligro = (Dirección, Int, TipoPeligro)
 
 instance Show NaveEspacial where
   show = ("\n" ++) . (padNave 0 0 False)
-
+  
+-------------------------------------------------------------------------------------------------
+-------------------------------Naves ejemplo-----------------------------------------------------
+-------------------------------------------------------------------------------------------------
 naveSinMotor = Base Contenedor  
-
 nave1 = Base Motor
 nave2 = Módulo Cañón (Base Escudo) (Base Motor)
 nave3 = Módulo Motor (Base Escudo) (Base Cañón)
@@ -33,6 +37,7 @@ padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) e
 					  padNave (nivel+1) (acum+l) True d where l = length $ show x
 
 					  
+losComponentes = [Contenedor ..]
 					  
 pad :: Int -> String
 pad i = replicate i ' '
@@ -56,8 +61,9 @@ poderDeAtaque = contarComponentes Cañón
 puedeVolar :: NaveEspacial -> Bool
 puedeVolar n =  (>0) (contarComponentes Motor n)    
 
+--Sacarle el argumento
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
-mismoPotencial = undefined
+mismoPotencial n m =  areEqual (map (flip contarComponentes n) losComponentes) (map (flip contarComponentes m) losComponentes)
 
 --Ejercicio 3
 
@@ -98,3 +104,10 @@ contarComponentes com = foldNave (\c m n -> esComponente c com + m + n) (\c -> e
 --Habria que hacerlo mas elegante
 esComponente :: Componente -> Componente -> Int
 esComponente c d = if c==d then 1 else 0
+
+
+areEqual:: Eq a => [a] -> [a] -> Bool
+areEqual [] [] = True
+areEqual _ [] = False
+areEqual [] _ = True
+areEqual (x:xs) (y:ys) = (x==y) && areEqual xs ys
