@@ -36,9 +36,17 @@ padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) e
 					  pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
 					  padNave (nivel+1) (acum+l) True d where l = length $ show x
 
+
+componenteAEscudo :: Componente -> Componente
+componenteAEscudo c = Escudo 
+					  
 					  
 losComponentes = [Contenedor ..]
-					  
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+
+
 pad :: Int -> String
 pad i = replicate i ' '
 
@@ -80,7 +88,33 @@ transformar compReplace = foldNave (\c -> Módulo (compReplace c)) (Base . compR
 
 -- Ejercicio 5
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
-impactar = undefined
+impactar (d,i,t) n = derribarNave (parteNave d i n) t n
+
+parteNave :: Dirección -> Int -> NaveEspacial -> NaveEspacial
+parteNave d 0 n = n
+parteNave d i (Base c) = Base c    
+parteNave d i (Módulo c n m) = if d == Estribor then parteNave Estribor (i-1) n else parteNave Babor (i-1) m
+
+derribarNave :: NaveEspacial -> TipoPeligro -> NaveEspacial -> NaveEspacial
+derribarNave subNave tipoPeli nave = case tipoPeli of
+										Pequeño -> if tieneEscudo subNave then nave else quitarSubNave subNave nave
+										Grande -> if tieneCañon subNave then derribarNave subNave Pequeño nave else quitarSubNave subNave nave
+										Torpedo -> quitarSubNave subNave nave
+
+tieneEscudo :: NaveEspacial -> Bool
+tieneEscudo n = (cabina n) == Escudo
+
+tieneCañon :: NaveEspacial -> Bool
+tieneCañon (Base c) = c== Cañón
+tieneCañon (Módulo c n m) = (c == Cañón) || tieneCañon n || tieneCañon m 
+
+quitarSubNave:: NaveEspacial -> NaveEspacial -> NaveEspacial
+quitarSubNave subnave (Base c) = Base c
+quitarSubNave subnave (Módulo c n m) = if subnave == n then (Módulo c (Base Contenedor) m) else (if subnave == m then (Módulo c n (Base Contenedor) ) else (Módulo c n m)) 
+ 
+cabina :: NaveEspacial -> Componente
+cabina (Base c) = c
+cabina (Módulo c m n) = c
 
 -- Ejercicio 6
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
