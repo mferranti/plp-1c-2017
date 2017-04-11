@@ -37,8 +37,6 @@ padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) e
             padNave (nivel+1) (acum+l) True d where l = length $ show x
 
 
-<<<<<<< HEAD
-
 componenteAEscudo :: Componente -> Componente
 componenteAEscudo c = Escudo 
 					  
@@ -47,10 +45,6 @@ losComponentes = [Contenedor ..]
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
-
-=======
-losComponentes = [Contenedor ..]
->>>>>>> origin/master
 
 pad :: Int -> String
 pad i = replicate i ' '
