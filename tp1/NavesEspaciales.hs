@@ -28,14 +28,16 @@ nave6 = Módulo Contenedor nave4 nave1
 nave7 = Módulo Contenedor nave1 nave5
 nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
-		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
-		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo))) 
+    (Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
+    (Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo))) 
   
 padNave nivel acum doPad (Base c) = (if doPad then pad (4*nivel + acum) else "") ++ show c
 padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) else "") ++ show x ++ 
-					  pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
-					  padNave (nivel+1) (acum+l) True d where l = length $ show x
+            pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
+            padNave (nivel+1) (acum+l) True d where l = length $ show x
 
+
+<<<<<<< HEAD
 
 componenteAEscudo :: Componente -> Componente
 componenteAEscudo c = Escudo 
@@ -46,6 +48,9 @@ losComponentes = [Contenedor ..]
 ---------------------------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------------------------
 
+=======
+losComponentes = [Contenedor ..]
+>>>>>>> origin/master
 
 pad :: Int -> String
 pad i = replicate i ' '
@@ -61,7 +66,7 @@ foldNave fNaveCompleta fNaveBase (Módulo c n m) = fNaveCompleta c (subNave n) (
 --Ejercicio 2
 capacidad :: NaveEspacial -> Int
 capacidad = contarComponentes Contenedor
-				
+
 poderDeAtaque :: NaveEspacial -> Int
 poderDeAtaque = contarComponentes Cañón   
 
@@ -118,11 +123,11 @@ cabina (Módulo c m n) = c
 
 -- Ejercicio 6
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
-maniobrar = undefined
+maniobrar = foldl (\naveAcum p -> impactar p naveAcum)
 
 -- Ejercicio 7
 pruebaDeFuego :: [Peligro] -> [NaveEspacial] -> [NaveEspacial]
-pruebaDeFuego = undefined
+pruebaDeFuego ps nes = filter puedeVolar $ map (flip maniobrar ps) nes
 
 -- Ejercicio 8
 componentesPorNivel :: NaveEspacial -> Int -> Int
