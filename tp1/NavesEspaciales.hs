@@ -90,29 +90,31 @@ impactar (d,i,t) n = derribarNave (parteNave d i n) t n
 
 parteNave :: Dirección -> Int -> NaveEspacial -> NaveEspacial
 parteNave d 0 n = n
-parteNave d i (Base c) = Base c    
+parteNave d i (Base c) = Base c
 parteNave d i (Módulo c n m) = if d == Estribor then parteNave Estribor (i-1) n else parteNave Babor (i-1) m
 
 derribarNave :: NaveEspacial -> TipoPeligro -> NaveEspacial -> NaveEspacial
 derribarNave subNave tipoPeli nave = case tipoPeli of
 										Pequeño -> if tieneEscudo subNave then nave else quitarSubNave subNave nave
-										Grande -> if tieneCañon subNave then derribarNave subNave Pequeño nave else quitarSubNave subNave nave
+										Grande -> if protegidoPorCañon subNave then derribarNave subNave Pequeño nave else quitarSubNave subNave nave
 										Torpedo -> quitarSubNave subNave nave
 
 tieneEscudo :: NaveEspacial -> Bool
 tieneEscudo n = (cabina n) == Escudo
 
-tieneCañon :: NaveEspacial -> Bool
-tieneCañon (Base c) = c== Cañón
-tieneCañon (Módulo c n m) = (c == Cañón) || tieneCañon n || tieneCañon m 
+protegidoPorCañon :: NaveEspacial -> Bool
+protegidoPorCañon nave = tieneCañon (subnaveDir Babor) || tieneCañon (subnaveDir Estribor)
+                         where subnaveDir = \dir -> parteNave dir 1 nave
 
-quitarSubNave:: NaveEspacial -> NaveEspacial -> NaveEspacial
+tieneCañon :: NaveEspacial -> Bool
+tieneCañon = foldNave (\c m n -> (c == Cañón) || m || n) ((==) Cañón)
+
+quitarSubNave :: NaveEspacial -> NaveEspacial -> NaveEspacial
 quitarSubNave subnave (Base c) = Base c
-quitarSubNave subnave (Módulo c n m) = if subnave == n then (Módulo c (Base Contenedor) m) else (if subnave == m then (Módulo c n (Base Contenedor) ) else (Módulo c n m)) 
- 
+quitarSubNave subnave (Módulo c n m) = if subnave == n then (Módulo c (Base Contenedor) m) else (if subnave == m then (Módulo c n (Base Contenedor) ) else (Módulo c n m))
+
 cabina :: NaveEspacial -> Componente
-cabina (Base c) = c
-cabina (Módulo c m n) = c
+cabina = foldNave (\c m n -> c) id
 
 -- Ejercicio 6
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
