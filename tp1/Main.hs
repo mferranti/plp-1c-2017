@@ -60,13 +60,15 @@ testsEj2 = test [
   True ~=? mismoPotencial nave4 nave5,
   True ~=? mismoPotencial nave6 nave7,
   False ~=? mismoPotencial nave1 nave6
-  -- Revisar por que deberian ser distintos
-  -- nave1 = Base Motor 
-  -- nave6 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Escudo) (Base Motor)) (Módulo Motor (Base Escudo) (Base Cañón))) (Base Motor)
   ]
 
 testsEj3 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  --0 ~=? 0 --Cambiar esto por tests verdaderos.
+  nave8 ~=? mayorCapacidad [nave1, nave2, nave3, nave4, nave5, nave6, nave7, nave8],
+  nave1 ~=? mayorCapacidad [nave1, nave2, nave3],
+  nave1 ~=? mayorCapacidad [nave1],
+  nave4 ~=? mayorCapacidad [nave1, nave4],
+  nave9 ~=? mayorCapacidad [nave1, nave4, nave9]
   ]
 
 testsEj4 = test [

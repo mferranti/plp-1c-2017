@@ -70,7 +70,7 @@ puedeVolar n = (>0) (contarComponentes Motor n)
 --Sacarle el argumento
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
 mismoPotencial n m = (contarTodosComponentes n) == (contarTodosComponentes m)
-                   where contarTodosComponentes = \nave -> (map (flip contarComponentes n) losComponentes)
+                   where contarTodosComponentes = \nave -> (map (flip contarComponentes nave) losComponentes)
 
 --mismoPotencial
 --Ejercicio 3
