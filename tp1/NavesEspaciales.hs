@@ -129,10 +129,40 @@ pruebaDeFuego ps nes = filter puedeVolar $ map (flip maniobrar ps) nes
 
 -- Ejercicio 8
 componentesPorNivel :: NaveEspacial -> Int -> Int
-componentesPorNivel = undefined
+componentesPorNivel nave nivel = snd $ head $ filter (\t -> fst t == nivel) listaPorNivel
+                                where listaPorNivel = foldNave (\c brec erec -> (:) (0,1) $ actualizarNivel $ mergeNivel brec erec) (const [(0,1)]) nave
+
+mergeNivel :: [(Int,Int)] -> [(Int,Int)] -> [(Int,Int)]
+mergeNivel [] ys = ys
+mergeNivel xs [] = xs
+mergeNivel (x:xs) (y:ys) = if (fst x == fst y) then (fst x, snd x + snd y) : (mergeNivel xs ys) else (fst x, snd x) : (mergeNivel xs (y:ys))
+
+actualizarNivel :: [(Int,Int)] -> [(Int,Int)]
+actualizarNivel = map (\x -> (1 + fst x, snd x))
+
+-- El algoritmo de componentesPorNivel esta basado en la siguiente reduccion.
+-- El primer elemento de la tupla es el nivel y el segundo elemento la cantidad acumulada.
+--            escudo             [(0,1)]
+--      motor              [(0,1),(1,2)]
+--            escudo             [(0,1)]
+--canon              [(0,1),(1,2),(2,4)]
+--            escudo             [(0,1)]
+--      motor              [(0,1),(1,2)]
+--            escudo             [(0,1)]
+--
+--
+--            escudo             [(0,1)]
+--      motor        [(0,1),(1,2)]
+--            escudo             [(0,1)]
+--canon              [(0,1),(1,2)(2,2)]
+--
+--      conte           [(0,1)]
+
+
 
 dimensiones :: NaveEspacial -> (Int, Int)
 dimensiones = undefined
+
 
 -----------------------------------------------------------------------------------------------
 ------------------------------AUXILIARES-------------------------------------------------------
