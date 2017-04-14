@@ -30,7 +30,11 @@ nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
     (Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
     (Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo))) 
-  
+
+naveSinCanon = Módulo Escudo
+    (Módulo Escudo (Módulo Escudo (Base Escudo) (Base Motor)) (Módulo Motor (Base Contenedor) (Base Motor)))
+    (Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Motor) (Base Escudo)))
+
 padNave nivel acum doPad (Base c) = (if doPad then pad (4*nivel + acum) else "") ++ show c
 padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) else "") ++ show x ++ 
             pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
@@ -86,18 +90,21 @@ transformar compReplace = foldNave (\c -> Módulo (compReplace c)) (Base . compR
 
 -- Ejercicio 5
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
-impactar (d,i,t) n = derribarNave (parteNave d i n) t n
+impactar (d,0,t) subnave = derribar subnave t
+impactar (d,i,t) (Base c) = Base c
+impactar (d,i,t) (Módulo c b e) = if d == Babor then Módulo c (impactarRec b) e else Módulo c b (impactar(d,i-1,t) e)
+                     where impactarRec = \n -> impactar(d,i-1,t) n
 
 parteNave :: Dirección -> Int -> NaveEspacial -> NaveEspacial
 parteNave d 0 n = n
 parteNave d i (Base c) = Base c
-parteNave d i (Módulo c n m) = if d == Estribor then parteNave Estribor (i-1) n else parteNave Babor (i-1) m
+parteNave d i (Módulo c m n) = if d == Babor then parteNave Babor (i-1) n else parteNave Estribor (i-1) m
 
-derribarNave :: NaveEspacial -> TipoPeligro -> NaveEspacial -> NaveEspacial
-derribarNave subNave tipoPeli nave = case tipoPeli of
-										Pequeño -> if tieneEscudo subNave then nave else quitarSubNave subNave nave
-										Grande -> if protegidoPorCañon subNave then derribarNave subNave Pequeño nave else quitarSubNave subNave nave
-										Torpedo -> quitarSubNave subNave nave
+derribar :: NaveEspacial -> TipoPeligro -> NaveEspacial
+derribar nave tipoPeli = case tipoPeli of
+                    Pequeño -> if tieneEscudo nave then nave else (Base Contenedor)
+                    Grande -> if protegidoPorCañon nave then derribar nave Pequeño else (Base Contenedor)
+                    Torpedo -> (Base Contenedor)
 
 tieneEscudo :: NaveEspacial -> Bool
 tieneEscudo n = (cabina n) == Escudo
@@ -108,10 +115,6 @@ protegidoPorCañon nave = tieneCañon (subnaveDir Babor) || tieneCañon (subnave
 
 tieneCañon :: NaveEspacial -> Bool
 tieneCañon = foldNave (\c m n -> (c == Cañón) || m || n) ((==) Cañón)
-
-quitarSubNave :: NaveEspacial -> NaveEspacial -> NaveEspacial
-quitarSubNave subnave (Base c) = Base c
-quitarSubNave subnave (Módulo c n m) = if subnave == n then (Módulo c (Base Contenedor) m) else (if subnave == m then (Módulo c n (Base Contenedor) ) else (Módulo c n m))
 
 cabina :: NaveEspacial -> Componente
 cabina = foldNave (\c m n -> c) id
@@ -136,7 +139,7 @@ dimensiones = undefined
 -----------------------------------------------------------------------------------------------
 
 contarComponentes ::  Componente -> NaveEspacial -> Int
-contarComponentes com = foldNave (\c m n -> esComponente c com + m + n) (\c -> esComponente c com) 
+contarComponentes com = foldNave (\c m n -> esComponente c com + m + n) (\c -> esComponente c com)
 
 --Habria que hacerlo mas elegante
 esComponente :: Componente -> Componente -> Int
