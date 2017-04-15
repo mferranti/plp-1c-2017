@@ -20,6 +20,12 @@ nave9 = Módulo Escudo
 		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
 		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
 nave10 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Módulo Motor (Base Cañón) (Base Cañón))) (Base Motor)
+nave11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
+nave12 = Módulo Contenedor (Módulo Escudo (Base Motor) (Base Motor)) (Base Motor)
+nave13 = Módulo Contenedor (Base Contenedor) (Base Motor)
+nave14 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Base Motor))
+nave15 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Base Contenedor))
+nave16 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Contenedor)) (Base Motor))
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -83,7 +89,31 @@ testsEj4 = test [
   ]
 
 testsEj5 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  nave13 ~=? impactar (Babor, 1, Torpedo) nave11,
+  nave12 ~=? impactar (Babor, 1 , Pequeño) nave12,
+  nave13 ~=? impactar (Babor, 1, Grande) nave12,
+  nave11 ~=? impactar (Babor, 1, Grande) nave11,
+  nave14 ~=? impactar (Babor, 3, Grande) nave14,
+  nave15 ~=? impactar (Estribor, 2, Grande) nave14
+-------------------------------------------------------------------------------
+  --nave16 ~=? impactar (Estribor, 3, Grande) nave14
+--              Contenedor
+--    Cañón                 Contenedor
+--Motor Contenedor      Cañón       Motor
+--                    Cañón Motor          <-- Peligro (Estribor, 3, Grande)
+--Deberia dar:
+--              Contenedor
+--    Cañón                 Contenedor
+--Motor Contenedor      Cañón       Motor
+--                    Cañón Contenedor        
+-------------------------------------------------------------------------------
+  --nave14 ~=? impactar (Estribor, 1, Grande) nave14
+--              Contenedor
+--    Cañón                 Contenedor    <-- Peligro (Estribor, 1, Grande)
+--Motor Contenedor      Cañón       Motor
+--                    Cañón Motor          
+--Deberia dar: el mismo arbol porque hay un Cañón en su subarbol
+-------------------------------------------------------------------------------
   ]
 
 testsEj6 = test [
