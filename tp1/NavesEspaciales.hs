@@ -123,6 +123,7 @@ cabina = foldNave (\c m n -> c) id
 maniobrar :: NaveEspacial -> [Peligro] -> NaveEspacial
 maniobrar = foldl (\naveAcum p -> impactar p naveAcum)
 
+
 -- Ejercicio 7
 pruebaDeFuego :: [Peligro] -> [NaveEspacial] -> [NaveEspacial]
 pruebaDeFuego ps nes = filter puedeVolar $ map (flip maniobrar ps) nes
@@ -161,7 +162,25 @@ actualizarNivel = map (\x -> (1 + fst x, snd x))
 
 
 dimensiones :: NaveEspacial -> (Int, Int)
-dimensiones = undefined
+dimensiones nave = (maximosComponentes nave, altura nave)
+
+maximosComponentes :: NaveEspacial -> Int
+maximosComponentes n =  maximum $ map (componentesPorNivel n) [0..altura n]
+
+
+naveA = Base Contenedor
+naveB = Módulo Cañón naveA (Base Contenedor)
+naveC = Módulo Cañón naveB (Base Contenedor)
+naveD = Módulo Cañón naveC (Base Contenedor)
+naveE = Módulo Cañón naveD (Base Contenedor)
+naveF = Módulo Cañón naveE (Base Contenedor)
+
+altura:: NaveEspacial -> Int
+altura = foldNave (\c e b -> 1 + max e b ) (const 0)   
+
+-- foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
+-- foldNave fNaveCompleta fNaveBase (Base c) = fNaveBase c
+-- foldNave fNaveCompleta fNaveBase (Módulo c n m) = fNaveCompleta c (subNave n) (subNave m)
 
 
 -----------------------------------------------------------------------------------------------
