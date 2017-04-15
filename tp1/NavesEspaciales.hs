@@ -168,12 +168,12 @@ maximosComponentes :: NaveEspacial -> Int
 maximosComponentes n =  maximum $ map (componentesPorNivel n) [0..altura n]
 
 
-naveA = Base Contenedor
-naveB = Módulo Cañón naveA (Base Contenedor)
-naveC = Módulo Cañón naveB (Base Contenedor)
-naveD = Módulo Cañón naveC (Base Contenedor)
-naveE = Módulo Cañón naveD (Base Contenedor)
-naveF = Módulo Cañón naveE (Base Contenedor)
+-- naveA = Base Contenedor
+-- naveB = Módulo Cañón naveA (Base Contenedor)
+-- naveC = Módulo Cañón naveB (Base Contenedor)
+-- naveD = Módulo Cañón naveC (Base Contenedor)
+-- naveE = Módulo Cañón naveD (Base Contenedor)
+-- naveF = Módulo Cañón naveE (Base Contenedor)
 
 altura:: NaveEspacial -> Int
 altura = foldNave (\c e b -> 1 + max e b ) (const 0)   
