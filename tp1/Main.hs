@@ -19,13 +19,32 @@ nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
 		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
 		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
+
+--naves agregadas para ejercicio 4
 nave10 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Módulo Motor (Base Cañón) (Base Cañón))) (Base Motor)
+
+--naves agregadas para ejercicio 5
 nave11 = Módulo Contenedor (Módulo Escudo (Base Cañón) (Base Motor)) (Base Motor)
 nave12 = Módulo Contenedor (Módulo Escudo (Base Motor) (Base Motor)) (Base Motor)
 nave13 = Módulo Contenedor (Base Contenedor) (Base Motor)
 nave14 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Base Motor))
 nave15 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Base Contenedor))
 nave16 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Contenedor)) (Base Motor))
+nave17 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Escudo) (Base Motor)) (Base Contenedor)) (Base Contenedor)
+nave18 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Base Contenedor)
+
+--naves agregadas para ejercicio 6
+nave19 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Escudo) (Base Motor)) (Módulo Motor (Base Escudo) (Base Cañón))) (Base Contenedor)
+nave20 = Módulo Contenedor (Base Escudo) (Módulo Escudo (Base Escudo) (Base Cañón))
+nave21 = Módulo Contenedor (Base Escudo) (Módulo Escudo (Base Escudo) (Base Contenedor))
+nave22 = Módulo Contenedor (Base Escudo) (Base Contenedor)
+
+--naves agregadas para ejercicio 7
+nave23 = Módulo Escudo (Módulo Cañón (Módulo Contenedor (Base Escudo) (Base Motor)) (Base Motor)) (Módulo Motor (Base Escudo) (Módulo Escudo (Base Contenedor) (Base Contenedor)))
+nave24 = Módulo Contenedor (Módulo Motor (Módulo Escudo (Base Contenedor) (Base Contenedor)) (Base Escudo)) (Módulo Motor (Base Motor) (Módulo Escudo (Base Contenedor) (Base Contenedor)))
+nave25 = Módulo Escudo (Módulo Escudo (Base Motor) (Base Cañón)) (Módulo Cañón (Base Escudo) (Módulo Contenedor (Base Motor) (Base Escudo)))
+nave26 = Módulo Escudo (Módulo Cañón (Base Contenedor) (Base Motor)) (Módulo Motor (Base Escudo) (Módulo Escudo (Base Contenedor) (Base Contenedor)))
+nave27 = Módulo Escudo (Módulo Escudo (Base Contenedor) (Base Cañón)) (Módulo Cañón (Base Escudo) (Módulo Contenedor (Base Motor) (Base Contenedor)))
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -94,7 +113,8 @@ testsEj5 = test [
   nave13 ~=? impactar (Babor, 1, Grande) nave12,
   nave11 ~=? impactar (Babor, 1, Grande) nave11,
   nave14 ~=? impactar (Babor, 3, Grande) nave14,
-  nave15 ~=? impactar (Estribor, 2, Grande) nave14
+  nave15 ~=? impactar (Estribor, 2, Grande) nave14,
+  nave18 ~=? impactar (Estribor, 1, Grande) nave14
 -------------------------------------------------------------------------------
   --nave16 ~=? impactar (Estribor, 3, Grande) nave14
 --              Contenedor
@@ -107,26 +127,27 @@ testsEj5 = test [
 --Motor Contenedor      Cañón       Motor
 --                    Cañón Contenedor        
 -------------------------------------------------------------------------------
-  --nave14 ~=? impactar (Estribor, 1, Grande) nave14
---              Contenedor
---    Cañón                 Contenedor    <-- Peligro (Estribor, 1, Grande)
---Motor Contenedor      Cañón       Motor
---                    Cañón Motor          
---Deberia dar: el mismo arbol porque hay un Cañón en su subarbol
--------------------------------------------------------------------------------
   ]
 
 testsEj6 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  nave19 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño)],
+  contenedorSolo ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño), (Estribor, 0, Torpedo)],
+  nave21 ~=? maniobrar nave20 [(Estribor, 1, Grande), (Estribor, 2, Pequeño)],
+  nave22 ~=? maniobrar nave20 [(Estribor, 2, Pequeño), (Estribor, 1, Grande)]
+  --Cuando se cambie impactar este test deberia funcionar.
+  --nave17 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Estribor, 2, Grande), (Babor, 3, Pequeño)]
   ]
 
 testsEj7 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
-  --[nave1,nave3,nave9] ~=? pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9]
+  3 ~=? length (pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9]),
+  [nave26,nave27] ~=? pruebaDeFuego [(Babor, 2, Torpedo), (Estribor, 3, Grande), (Estribor, 0, Pequeño)] [nave23,nave24,nave25]
   ]
 
 testsEj8 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  -- 0 ~=? 0 --Cambiar esto por tests verdaderos.
+  8 ~=? componentesPorNivel nave9 3,
+  4 ~=? componentesPorNivel nave14 2,
+  2 ~=? componentesPorNivel nave14 3
   --(4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)])
   ]
 
