@@ -7,6 +7,7 @@ import Data.List
 
 --Naves para pruebas:
 contenedorSolo = Base Contenedor
+soloEscudo = Base Escudo
 nave1 = Base Motor
 nave2 = Módulo Cañón (Base Escudo) (Base Motor)
 nave3 = Módulo Motor (Base Escudo) (Base Cañón)
@@ -18,6 +19,7 @@ nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
 		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
 		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
+nave10 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Módulo Motor (Base Cañón) (Base Cañón))) (Base Motor)
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -35,6 +37,11 @@ superProtegido = Módulo Motor protegido protegido
 
 desbalanceado = Módulo Escudo (Base Contenedor) protegido
 
+todoAEscudo :: Componente -> Componente
+todoAEscudo c = Escudo
+
+escudoACanon :: Componente -> Componente
+escudoACanon c = if (c == Escudo) then Cañón else c 
 
 --Ejecución de los tests
 main :: IO Counts
@@ -63,7 +70,6 @@ testsEj2 = test [
   ]
 
 testsEj3 = test [
-  --0 ~=? 0 --Cambiar esto por tests verdaderos.
   nave8 ~=? mayorCapacidad [nave1, nave2, nave3, nave4, nave5, nave6, nave7, nave8],
   nave1 ~=? mayorCapacidad [nave1, nave2, nave3],
   nave1 ~=? mayorCapacidad [nave1],
@@ -72,7 +78,8 @@ testsEj3 = test [
   ]
 
 testsEj4 = test [
-  0 ~=? 0 --Cambiar esto por tests verdaderos.
+  soloEscudo ~=? transformar todoAEscudo nave1,
+  nave10 ~=? transformar escudoACanon nave6
   ]
 
 testsEj5 = test [
