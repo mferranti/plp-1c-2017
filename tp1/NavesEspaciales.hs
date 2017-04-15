@@ -34,6 +34,10 @@ nave9 = Módulo Escudo
 naveSinCanon = Módulo Escudo
     (Módulo Escudo (Módulo Escudo (Base Escudo) (Base Motor)) (Módulo Motor (Base Contenedor) (Base Motor)))
     (Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Motor) (Base Escudo)))
+	
+
+nave14 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Base Motor))
+
 
 padNave nivel acum doPad (Base c) = (if doPad then pad (4*nivel + acum) else "") ++ show c
 padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) else "") ++ show x ++ 
@@ -95,6 +99,23 @@ impactar (d,i,t) (Base c) = Base c
 impactar (d,i,t) (Módulo c b e) = if d == Babor then Módulo c (impactarRec b) e else Módulo c b (impactar(d,i-1,t) e)
                      where impactarRec = \n -> impactar(d,i-1,t) n
 
+					 
+naveMasA :: Dirección -> Int -> NaveEspacial -> NaveEspacial
+--naveMasA d 0 n = n 
+naveMasA Estribor i n = foldNave (\c b e -> if (esBase e) then b else e) (\c -> n) n  
+naveMasA Babor i n = foldNave (\c b e -> if (esBase b) then e else b) (\c -> n) n
+
+esBase:: NaveEspacial -> Bool
+esBase (Base c) = True
+esBase (Módulo c n m) = False
+
+-- foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
+-- foldNave fNaveCompleta fNaveBase (Base c) = fNaveBase c
+-- foldNave fNaveCompleta fNaveBase (Módulo c n m) = fNaveCompleta c (subNave n) (subNave m)
+                                                -- where subNave = foldNave fNaveCompleta fNaveBase
+
+
+					 
 parteNave :: Dirección -> Int -> NaveEspacial -> NaveEspacial
 parteNave d 0 n = n
 parteNave d i (Base c) = Base c
