@@ -32,6 +32,7 @@ nave15 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módu
 nave16 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Contenedor)) (Base Motor))
 nave17 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Escudo) (Base Motor)) (Base Contenedor)) (Base Contenedor)
 nave18 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Base Contenedor)
+nave28 = Módulo Contenedor (Módulo Cañón (Base Motor) (Base Cañón)) (Módulo Contenedor (Módulo Cañón (Base Contenedor) (Base Motor)) (Base Motor))
 
 --naves agregadas para ejercicio 6
 nave19 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Escudo) (Base Motor)) (Módulo Motor (Base Escudo) (Base Cañón))) (Base Contenedor)
@@ -112,11 +113,11 @@ testsEj5 = test [
   nave12 ~=? impactar (Babor, 1 , Pequeño) nave12,
   nave13 ~=? impactar (Babor, 1, Grande) nave12,
   nave11 ~=? impactar (Babor, 1, Grande) nave11,
-  nave14 ~=? impactar (Babor, 3, Grande) nave14,
+  nave28 ~=? impactar (Babor, 3, Grande) nave14,
   nave15 ~=? impactar (Estribor, 2, Grande) nave14,
-  nave18 ~=? impactar (Estribor, 1, Grande) nave14
+  nave18 ~=? impactar (Estribor, 1, Grande) nave14,
 -------------------------------------------------------------------------------
-  --nave16 ~=? impactar (Estribor, 3, Grande) nave14
+  nave16 ~=? impactar (Estribor, 3, Grande) nave14
 --              Contenedor
 --    Cañón                 Contenedor
 --Motor Contenedor      Cañón       Motor
@@ -130,15 +131,17 @@ testsEj5 = test [
   ]
 
 testsEj6 = test [
+  --0 ~=? 0 --Cambiar esto por tests verdaderos.
   nave19 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño)],
   contenedorSolo ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño), (Estribor, 0, Torpedo)],
   nave21 ~=? maniobrar nave20 [(Estribor, 1, Grande), (Estribor, 2, Pequeño)],
-  nave22 ~=? maniobrar nave20 [(Estribor, 2, Pequeño), (Estribor, 1, Grande)]
+  nave22 ~=? maniobrar nave20 [(Estribor, 2, Pequeño), (Estribor, 1, Grande)],
   --Cuando se cambie impactar este test deberia funcionar.
-  --nave17 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Estribor, 2, Grande), (Babor, 3, Pequeño)]
+  nave17 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Estribor, 2, Grande), (Babor, 3, Pequeño)]
   ]
 
 testsEj7 = test [
+  --0 ~=? 0 --Cambiar esto por tests verdaderos.
   3 ~=? length (pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9]),
   [nave26,nave27] ~=? pruebaDeFuego [(Babor, 2, Torpedo), (Estribor, 3, Grande), (Estribor, 0, Pequeño)] [nave23,nave24,nave25]
   ]

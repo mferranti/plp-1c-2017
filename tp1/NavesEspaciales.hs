@@ -94,20 +94,26 @@ transformar compReplace = foldNave (\c -> Módulo (compReplace c)) (Base . compR
 
 -- Ejercicio 5
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
-impactar (d,0,t) subnave = derribar subnave t
-impactar (d,i,t) (Base c) = Base c
-impactar (d,i,t) (Módulo c b e) = if d == Babor then Módulo c (impactarRec b) e else Módulo c b (impactar(d,i-1,t) e)
-                     where impactarRec = \n -> impactar(d,i-1,t) n
+impactar (d, 0, t) subnave = derribar subnave t
+impactar (d, i, t) (Base c) = Base c
+impactar (Babor, i, t) (Módulo c izq der) = if (altura(izq) >= (i-1)) then (Módulo c (impactar (Babor, i-1, t) izq) der) else (Módulo c izq (impactar (Babor, i-1, t) der))
+impactar (Estribor, i, t) (Módulo c izq der) = if (altura(der) >= (i-1)) then (Módulo c izq (impactar (Estribor, i-1, t) der)) else (Módulo c (impactar (Estribor, i-1, t) izq) der)
+
+--impactar :: Peligro -> NaveEspacial -> NaveEspacial
+--impactar (d,0,t) subnave = derribar subnave t
+--impactar (d,i,t) (Base c) = Base c
+--impactar (d,i,t) (Módulo c b e) = if d == Babor then Módulo c (impactarRec b) e else Módulo c b (impactar(d,i-1,t) e)
+--                     where impactarRec = \n -> impactar(d,i-1,t) n
 
 					 
-naveMasA :: Dirección -> Int -> NaveEspacial -> NaveEspacial
+--naveMasA :: Dirección -> Int -> NaveEspacial -> NaveEspacial
 --naveMasA d 0 n = n 
-naveMasA Estribor i n = foldNave (\c b e -> if (esBase e) then b else e) (\c -> n) n  
-naveMasA Babor i n = foldNave (\c b e -> if (esBase b) then e else b) (\c -> n) n
+--naveMasA Estribor i n = foldNave (\c b e -> if (esBase e) then b else e) (\c -> n) n  
+--naveMasA Babor i n = foldNave (\c b e -> if (esBase b) then e else b) (\c -> n) n
 
-esBase:: NaveEspacial -> Bool
-esBase (Base c) = True
-esBase (Módulo c n m) = False
+--esBase:: NaveEspacial -> Bool
+--esBase (Base c) = True
+--esBase (Módulo c n m) = False
 
 -- foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
 -- foldNave fNaveCompleta fNaveBase (Base c) = fNaveBase c
