@@ -17,8 +17,8 @@ nave6 = Módulo Contenedor nave4 nave1
 nave7 = Módulo Contenedor nave1 nave5
 nave8 = Módulo Contenedor nave1 nave6
 nave9 = Módulo Escudo 
-		(Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
-		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
+    (Módulo Escudo (Módulo Escudo (Base Escudo) (Base Cañón)) (Módulo Motor (Base Contenedor) (Base Motor))) 
+    (Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
 
 --naves agregadas para ejercicio 4
 nave10 = Módulo Contenedor (Módulo Contenedor (Módulo Cañón (Base Cañón) (Base Motor)) (Módulo Motor (Base Cañón) (Base Cañón))) (Base Motor)
@@ -46,6 +46,11 @@ nave24 = Módulo Contenedor (Módulo Motor (Módulo Escudo (Base Contenedor) (Ba
 nave25 = Módulo Escudo (Módulo Escudo (Base Motor) (Base Cañón)) (Módulo Cañón (Base Escudo) (Módulo Contenedor (Base Motor) (Base Escudo)))
 nave26 = Módulo Escudo (Módulo Cañón (Base Contenedor) (Base Motor)) (Módulo Motor (Base Escudo) (Módulo Escudo (Base Contenedor) (Base Contenedor)))
 nave27 = Módulo Escudo (Módulo Escudo (Base Contenedor) (Base Cañón)) (Módulo Cañón (Base Escudo) (Módulo Contenedor (Base Motor) (Base Contenedor)))
+
+--naves agregadas para el ejercicio 8
+nave29 = Módulo Escudo 
+		(Módulo Escudo (Base Contenedor) (Módulo Motor (Base Contenedor) (Base Motor))) 
+		(Módulo Escudo (Módulo Contenedor (Base Motor) (Base Contenedor)) (Módulo Escudo (Base Cañón) (Base Escudo)))
 
 soloUnMotor = Base Motor
 puroContenedor = Módulo Contenedor (Base Contenedor) (Base Contenedor)
@@ -110,12 +115,70 @@ testsEj4 = test [
 
 testsEj5 = test [
   nave13 ~=? impactar (Babor, 1, Torpedo) nave11,
+--                                   Contenedor
+--Peligro (Babor, 1, Torpedo) --> Escudo      Motor
+--                            Cañón Motor  
+--Deberia dar:
+--               Contenedor
+--          Contenedor       Motor  
+-------------------------------------------------------------------------------
   nave12 ~=? impactar (Babor, 1 , Pequeño) nave12,
+--                                   Contenedor
+--Peligro (Babor, 1, Pequeño) --> Escudo      Motor
+--                             Motor Motor             
+--Deberia dar: (no se debe modificar)
+--               Contenedor
+--          Escudo       Motor  
+--       Motor  Motor
+-------------------------------------------------------------------------------
   nave13 ~=? impactar (Babor, 1, Grande) nave12,
+--                                   Contenedor
+--Peligro (Babor, 1, Grande) --> Escudo      Motor
+--                            Motor Motor             
+--Deberia dar:
+--               Contenedor
+--          Contenedor       Motor  
+-------------------------------------------------------------------------------
   nave11 ~=? impactar (Babor, 1, Grande) nave11,
+--                                   Contenedor
+--Peligro (Babor, 1, Grande) --> Escudo      Motor
+--                            Cañón Motor             
+--Deberia dar: (no se debe modificar)
+--               Contenedor
+--          Escudo       Motor  
+--      Cañón Motor  
+-------------------------------------------------------------------------------
   nave28 ~=? impactar (Babor, 3, Grande) nave14,
+--                                           Contenedor
+--                                  Cañón                 Contenedor
+--                               Motor Contenedor      Cañón       Motor
+--Peligro (Babor, 3, Grande) -->                    Cañón Motor          
+--Deberia dar:
+--                    Contenedor
+--          Cañón                 Contenedor  
+--      Motor Contenedor      Cañón       Motor
+--                      Contenedor Motor
+-------------------------------------------------------------------------------
   nave15 ~=? impactar (Estribor, 2, Grande) nave14,
+--              Contenedor
+--    Cañón                 Contenedor  
+--Motor Contenedor      Cañón       Motor <-- Peligro (Estribor, 2, Grande)
+--                    Cañón Motor          
+--Deberia dar:
+--              Contenedor
+--    Cañón                 Contenedor  
+--Motor Contenedor      Cañón       Contenedor
+--                    Cañón Motor       
+-------------------------------------------------------------------------------
   nave18 ~=? impactar (Estribor, 1, Grande) nave14,
+--              Contenedor
+--    Cañón                 Contenedor  <-- Peligro (Estribor, 1, Grande)
+--Motor Contenedor      Cañón       Motor
+--                    Cañón Motor          
+--Deberia dar:
+--              Contenedor
+--    Cañón                 Contenedor
+--Motor Contenedor
 -------------------------------------------------------------------------------
   nave16 ~=? impactar (Estribor, 3, Grande) nave14
 --              Contenedor
@@ -131,27 +194,72 @@ testsEj5 = test [
   ]
 
 testsEj6 = test [
-  --0 ~=? 0 --Cambiar esto por tests verdaderos.
+-------------------------------------------------------------------------------
   nave19 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño)],
+--                                                 Contenedor
+--                                            Contenedor        Motor <-- (1°) Peligro (Estribor, 1, Pequeño)
+--                                        Cañón        Motor
+--Peligro (Babor, 3, Pequeño) (2°) --> Escudo Motor Escudo Motor
+--Deberia dar:
+--                  Contenedor 
+--        Contenedor        Contenedor
+--    Cañón         Motor 
+--Escudo Motor  Escudo Cañón
+-------------------------------------------------------------------------------
   contenedorSolo ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Babor, 3, Pequeño), (Estribor, 0, Torpedo)],
+--                                                 Contenedor  <-- (3°) Peligro (Estribor, 0, Torpedo)
+--   Peligro (Estribor, 1, Pequeño) (1°) --> Contenedor        Motor 
+--                                        Cañón        Motor
+--Peligro (Babor, 3, Pequeño) (2°) --> Escudo Motor Escudo Motor
+--Deberia dar: (el torpedo destruye todo)
+-- Contenedor
+-------------------------------------------------------------------------------
+  contenedorSolo ~=? maniobrar nave6 [(Estribor, 0, Torpedo), (Estribor, 1, Pequeño), (Babor, 3, Pequeño)],
+-- Cambiamos el orden al test de arriba para atacar componentes que ya no existen
+-------------------------------------------------------------------------------
   nave21 ~=? maniobrar nave20 [(Estribor, 1, Grande), (Estribor, 2, Pequeño)],
+--    Contenedor
+-- Escudo    Escudo <-- (1°) Peligro (Estribor, 1, Grande)
+--        Escudo Cañón <-- (2°) Peligro (Estribor, 2, Pequeño)
+-- Deberia dar:
+--     Contenedor
+-- Escudo    Escudo
+--        Escudo Contenedor
+-------------------------------------------------------------------------------
   nave22 ~=? maniobrar nave20 [(Estribor, 2, Pequeño), (Estribor, 1, Grande)],
-  --Cuando se cambie impactar este test deberia funcionar.
+--    Contenedor
+-- Escudo    Escudo <-- (2°) Peligro (Estribor, 1, Grande)
+--        Escudo Cañón <-- (1°) Peligro (Estribor, 2, Pequeño)
+-- Deberia dar:
+--    Contenedor
+-- Escudo Contenedor
+-------------------------------------------------------------------------------
   nave17 ~=? maniobrar nave6 [(Estribor, 1, Pequeño), (Estribor, 2, Grande), (Babor, 3, Pequeño)]
+--                                                 Contenedor  
+--                                             Contenedor        Motor  <-- (1°) Peligro (Estribor, 1, Pequeño)
+--                                        Cañón        Motor  <-- (2°) Peligro (Estribor, 2, Grande)
+-- Peligro (Babor, 3, Pequeño) (3°) --> Escudo Motor Escudo Motor  
+-- Deberia dar:
+--                  Contenedor
+--          Contenedor      Contenedor
+--     Cañón      Contenedor
+-- Escudo Motor
+-------------------------------------------------------------------------------
   ]
 
 testsEj7 = test [
-  --0 ~=? 0 --Cambiar esto por tests verdaderos.
   3 ~=? length (pruebaDeFuego [(Babor,1,Grande),(Babor,2,Torpedo),(Estribor, 1, Pequeño)] [nave1,nave2,nave3,nave4,nave5,nave6,nave7,nave8,nave9]),
   [nave26,nave27] ~=? pruebaDeFuego [(Babor, 2, Torpedo), (Estribor, 3, Grande), (Estribor, 0, Pequeño)] [nave23,nave24,nave25]
   ]
 
 testsEj8 = test [
-  -- 0 ~=? 0 --Cambiar esto por tests verdaderos.
   8 ~=? componentesPorNivel nave9 3,
   4 ~=? componentesPorNivel nave14 2,
-  2 ~=? componentesPorNivel nave14 3
-  --(4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)])
+  2 ~=? componentesPorNivel nave14 3,
+  nave29 ~=? maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)],
+  (4,6) ~=? (dimensiones $ maniobrar nave9 [(Babor,1,Grande),(Babor,2,Torpedo)]),
+  (3,2) ~=? dimensiones nave11,
+  (2,2) ~=? (dimensiones $ maniobrar nave20 [(Estribor, 2, Pequeño), (Estribor, 1, Grande)])
   ]
 
 

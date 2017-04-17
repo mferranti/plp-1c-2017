@@ -43,9 +43,6 @@ padNave nivel acum doPad (Base c) = (if doPad then pad (4*nivel + acum) else "")
 padNave nivel acum doPad (Módulo x i d) = (if doPad then pad (4*nivel + acum) else "") ++ show x ++ 
             pad 4 ++ padNave (nivel+1) (acum+l) False i ++ "\n" ++
             padNave (nivel+1) (acum+l) True d where l = length $ show x
-
-componenteAEscudo :: Componente -> Componente
-componenteAEscudo c = Escudo 
 					  
 losComponentes = [Contenedor ..]
 
@@ -96,8 +93,8 @@ transformar compReplace = foldNave (\c -> Módulo (compReplace c)) (Base . compR
 impactar :: Peligro -> NaveEspacial -> NaveEspacial
 impactar (d, 0, t) subnave = derribar subnave t
 impactar (d, i, t) (Base c) = Base c
-impactar (Babor, i, t) (Módulo c izq der) = if (altura(izq) >= (i-1)) then (Módulo c (impactar (Babor, i-1, t) izq) der) else (Módulo c izq (impactar (Babor, i-1, t) der))
-impactar (Estribor, i, t) (Módulo c izq der) = if (altura(der) >= (i-1)) then (Módulo c izq (impactar (Estribor, i-1, t) der)) else (Módulo c (impactar (Estribor, i-1, t) izq) der)
+impactar (Babor, i, t) (Módulo c izq der) = if (altura(izq) >= i) then (Módulo c (impactar (Babor, i-1, t) izq) der) else (Módulo c izq (impactar (Babor, i-1, t) der))
+impactar (Estribor, i, t) (Módulo c izq der) = if (altura(der) >= i) then (Módulo c izq (impactar (Estribor, i-1, t) der)) else (Módulo c (impactar (Estribor, i-1, t) izq) der)
 
 --impactar :: Peligro -> NaveEspacial -> NaveEspacial
 --impactar (d,0,t) subnave = derribar subnave t
@@ -189,10 +186,10 @@ actualizarNivel = map (\x -> (1 + fst x, snd x))
 
 
 dimensiones :: NaveEspacial -> (Int, Int)
-dimensiones nave = (maximosComponentes nave, altura nave)
+dimensiones nave = (altura nave, maximosComponentes nave)
 
 maximosComponentes :: NaveEspacial -> Int
-maximosComponentes n =  maximum $ map (componentesPorNivel n) [0..altura n]
+maximosComponentes n =  maximum $ map (componentesPorNivel n) [0..altura n-1]
 
 
 -- naveA = Base Contenedor
@@ -203,7 +200,7 @@ maximosComponentes n =  maximum $ map (componentesPorNivel n) [0..altura n]
 -- naveF = Módulo Cañón naveE (Base Contenedor)
 
 altura:: NaveEspacial -> Int
-altura = foldNave (\c e b -> 1 + max e b ) (const 0)   
+altura = foldNave (\c e b -> 1 + max e b ) (const 1)   
 
 -- foldNave :: (Componente -> r -> r -> r) -> (Componente -> r) -> NaveEspacial -> r 
 -- foldNave fNaveCompleta fNaveBase (Base c) = fNaveBase c
