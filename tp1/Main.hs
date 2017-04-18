@@ -251,7 +251,7 @@ testsEj6 = test [
 -- Deberia dar:
 --                  Contenedor
 --          Contenedor      Contenedor
---     Cañón      Contenedor
+--      Cañón      Contenedor
 -- Escudo Motor
 -------------------------------------------------------------------------------
   ]
