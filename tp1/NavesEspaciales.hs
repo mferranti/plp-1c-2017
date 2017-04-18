@@ -68,16 +68,13 @@ capacidad = contarComponentes Contenedor
 poderDeAtaque :: NaveEspacial -> Int
 poderDeAtaque = contarComponentes Cañón   
 
---Arreglarlo, sacarle el parametro y usar flip o .
 puedeVolar :: NaveEspacial -> Bool
 puedeVolar n = (>0) (contarComponentes Motor n)
 
---Sacarle el argumento
 mismoPotencial :: NaveEspacial -> NaveEspacial -> Bool
 mismoPotencial n m = (contarTodosComponentes n) == (contarTodosComponentes m)
                    where contarTodosComponentes = \nave -> (map (flip contarComponentes nave) losComponentes)
 
---mismoPotencial
 --Ejercicio 3
 
 mayorCapacidad :: [NaveEspacial] -> NaveEspacial
