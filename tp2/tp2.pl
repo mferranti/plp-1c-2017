@@ -49,3 +49,13 @@ herramientasDeConf(jerarquica(X,Y), [Y|HS]):-
   herramientasDeConf(X,HS).
 
 permutations(X,L):-setof(A, permutation(X, A), L).
+
+%masPoderosa(+M1,+M2).
+masPoderosa(M1,M2):-
+  maxPotencial(M1,P1),
+  maxPotencial(M2,P2),
+  P1 > P2.
+
+maxPotencial(M, P):-
+  findall(PConf, configuracion(M,_,PConf, _), L),
+  max_member(P,L).
