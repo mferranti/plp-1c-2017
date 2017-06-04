@@ -59,3 +59,16 @@ masPoderosa(M1,M2):-
 maxPotencial(M, P):-
   findall(PConf, configuracion(M,_,PConf, _), L),
   max_member(P,L).
+
+%mejor(M1,M2)
+mejor(M1,M2):- not(not(siempreHayMejor(M1,M2))).
+
+siempreHayMejor(M1,M2):-
+  configuracion(M2,_,PM2, CM2),
+  existeMejor(M1,PM2,CM2).
+
+existeMejor(M1,PM2,CM2):-
+  configuracion(M1,_,PM1, CM1),
+  PM1 >= PM2,
+  CM1 < CM2,
+  !.
