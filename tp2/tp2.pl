@@ -89,3 +89,31 @@ sublist(Xs, [_|Ys]) :- sublist(Xs, Ys).
 
 deleteSublist([],L,L).
 deleteSublist([X|S],L,T):- deleteSublist(S,L,T2), selectchk(X,T2,T).
+
+%comprar(+P,+C,?M)
+comprar(P,C,M):-
+  setof(X, solucionesComprar(P,C,X), L),
+  list_to_set(L,S),
+  member(M,S).
+
+solucionesComprar(P,C,M):-
+  generarMochilas(C,L),
+  member(M,L),
+  configuracion(M,_,Pot,_),
+  Pot >= P.
+
+generarMochilas(1,M):- setof(X,generarMochilasDeTamano(1,X),M).
+generarMochilas(C,M):-
+  C =\= 1,
+  Csub is C - 1,
+  setof(X,generarMochilasDeTamano(C,X),L1),
+  generarMochilas(Csub,L2),
+  append(L1,L2,M).
+
+generarMochilasDeTamano(1,[X]):-herramienta(X,_).
+generarMochilasDeTamano(C,M):-
+  C =\= 1,
+  Csub is C - 1,
+  generarMochilasDeTamano(Csub,M2),
+  herramienta(X,_),
+  select(X,M,M2).
