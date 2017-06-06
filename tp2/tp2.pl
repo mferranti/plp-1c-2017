@@ -72,3 +72,20 @@ existeMejor(M1,PM2,CM2):-
   PM1 >= PM2,
   CM1 < CM2,
   !.
+
+%usar(+M1,+Ps,?Cs,?M2)
+usar(_,[],[],_).
+usar(M1,[P|PS],[C|CS],M2):-
+  setof(X,sublist(X,M1), L),
+  member(M,L),
+  deleteSublist(M,M1,M1Unused),
+  configuracion(M, C, Pot, _),
+  Pot >= P,
+  usar(M1Unused, PS, CS, M2).
+
+sublist([], _).
+sublist([X|Xs], [X|Ys]) :- sublist(Xs, Ys).
+sublist(Xs, [_|Ys]) :- sublist(Xs, Ys).
+
+deleteSublist([],L,L).
+deleteSublist([X|S],L,T):- deleteSublist(S,L,T2), selectchk(X,T2,T).
